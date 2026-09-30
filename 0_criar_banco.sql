@@ -1,9 +1,9 @@
 --CERTIFIQUE-SE DE QUE O BANCO DE DADOS POSTGRESQL ESTÁ RODANDO ANTES DE EXECUTAR ESTE SCRIPT E QUE O BANCO CHAMADA transparencia FOI CRIADO.
 
-DROP TABLE IF EXISTS SILVER_2025_Trecho;
-DROP TABLE IF EXISTS SILVER_2025_Pagamento;
-DROP TABLE IF EXISTS SILVER_2025_Passagem;
-DROP TABLE IF EXISTS SILVER_2025_Viagem;
+DROP TABLE IF EXISTS silver_trecho;
+DROP TABLE IF EXISTS silver_pagamento;
+DROP TABLE IF EXISTS silver_passagem;
+DROP TABLE IF EXISTS silver_viagem;
 
 DROP TABLE IF EXISTS raw_trecho;
 DROP TABLE IF EXISTS raw_pagamento;
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS raw_viagem (
     valor_devolucao VARCHAR(4000),
     valor_outros_gastos VARCHAR(4000)
 );
-CREATE TABLE IF NOT EXISTS SILVER_2025_Viagem (
+CREATE TABLE IF NOT EXISTS silver_viagem (
     id_viagem VARCHAR(20) PRIMARY KEY NOT NULL,
     num_proposta VARCHAR(20),
     situacao VARCHAR(50),
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS SILVER_2025_Viagem (
 );
 
 
-CREATE TABLE IF NOT EXISTS SILVER_2025_Passagem (
+CREATE TABLE IF NOT EXISTS silver_passagem (
     id_passagem INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_viagem VARCHAR(20) NOT NULL,
     meio_transporte VARCHAR(50),
@@ -117,14 +117,14 @@ CREATE TABLE IF NOT EXISTS SILVER_2025_Passagem (
     cidade_destino_ida VARCHAR(80),
     valor_passagem DECIMAL(10,2) CHECK (valor_passagem >= 0),
     taxa_servico DECIMAL(10,2) CHECK (taxa_servico >= 0),
-    data_emissao_compra DATE,
+    data_emissao DATE,
 
     FOREIGN KEY (id_viagem)
-        REFERENCES SILVER_2025_Viagem(id_viagem)
+        REFERENCES silver_viagem(id_viagem)
 );
 
 
-CREATE TABLE IF NOT EXISTS SILVER_2025_Pagamento (
+CREATE TABLE IF NOT EXISTS silver_pagamento (
     id_pagamento INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_viagem VARCHAR(20) NOT NULL,
     num_proposta VARCHAR(20),
@@ -134,11 +134,11 @@ CREATE TABLE IF NOT EXISTS SILVER_2025_Pagamento (
     valor DECIMAL(10,2) CHECK (valor >= 0),
 
     FOREIGN KEY (id_viagem)
-        REFERENCES SILVER_2025_Viagem(id_viagem)
+        REFERENCES silver_viagem(id_viagem)
 );
 
 
-CREATE TABLE IF NOT EXISTS SILVER_2025_Trecho (
+CREATE TABLE IF NOT EXISTS silver_trecho (
     id_trecho INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_viagem VARCHAR(20) NOT NULL,
     sequencia_trecho INT,
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS SILVER_2025_Trecho (
     numero_diarias DECIMAL(10,2) CHECK (numero_diarias >= 0),
 
     FOREIGN KEY (id_viagem)
-        REFERENCES SILVER_2025_Viagem(id_viagem),
+        REFERENCES silver_viagem(id_viagem),
 
     UNIQUE (id_viagem, sequencia_trecho)
 );

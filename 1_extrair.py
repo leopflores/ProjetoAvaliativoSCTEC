@@ -48,6 +48,7 @@ def ler_csv_em_chunks(nome_tabela):
         sep=config.CSV_SEPARADOR,
         encoding=config.CSV_ENCODING,
         chunksize=config.TAMANHO_BLOCO,
+        dtype=str
     ):
         yield df
 
@@ -211,6 +212,8 @@ def inserir_viagem(conexao, df):
 
 try:
 
+    print("Limpando tabelas raw...")
+
     banco.executar(
         conexao, 
         '''
@@ -220,6 +223,10 @@ try:
         TRUNCATE TABLE raw_trecho;
         '''
     )
+
+    print("Limpeza das tabelas raw concluída com sucesso!")
+
+    print("Adicionando dados nas tabelas raw...")
 
     for df in ler_csv_em_chunks("pagamento"):
         inserir_pagamento(conexao, df)
