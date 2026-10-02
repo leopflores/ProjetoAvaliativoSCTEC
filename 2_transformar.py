@@ -33,6 +33,7 @@ silver_viagem → silver_passagem → silver_pagamento → silver_trecho.
 
 
 import banco
+import pandas as pd
 
 def trunca_tabelas(conexao):
 
